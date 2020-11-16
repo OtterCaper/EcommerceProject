@@ -3,7 +3,7 @@
     <% if product.image.present? %>
       <div class="card-image">
         <figure class="image">
-          <%= image_tag product.image %>
+          <%= image_tag product.image, alt: product.name %>
         </figure>
       </div>
     <% end %>
@@ -15,7 +15,7 @@
           <%= product.name %>
         <% end %>
       </p>
-      <%# <p>Type: <%= link_to product.category.name, product.category %></p> %>
+      <p>Type: <%= link_to product.category.name, product.category %></p>
     </div>
 
     <% if !show_link %>
@@ -27,12 +27,18 @@
     <% end %>
 
     <footer class="card-footer">
-      <p class="card-footer-item">
-        Price: <br><%= product.price %>
-      </p>
+
       <% if product.sale %>
+        <div class="card-footer-item">
+            <p class="price_new_line">Price: <s><%=product.price%></s> </p>
+            <p class="price_new_line">Sale price: <b><%= product.price - (product.price * product.discount) %></b> </p>
+        </div>
         <p class="card-footer-item">
-          Sale: <br><%= product.discount %>% off
+            Sale:  <br><%= (product.discount * 100).floor %>% off
+        </p>
+      <% else %>
+        <p class="card-footer-item">
+          Price: <br><%= product.price %>
         </p>
       <% end %>
       <p class="card-footer-item">
