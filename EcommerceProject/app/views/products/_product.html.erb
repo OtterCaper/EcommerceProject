@@ -1,0 +1,43 @@
+<div class="column is-one-quarter">
+  <div class="card">
+    <% if product.image.present? %>
+      <div class="card-image">
+        <figure class="image">
+          <%= image_tag product.image %>
+        </figure>
+      </div>
+    <% end %>
+    <div class="card-content">
+      <p class="title 3">
+        <% if show_link %>
+          <%= link_to product.name, product %>
+        <% else %>
+          <%= product.name %>
+        <% end %>
+      </p>
+      <%# <p>Type: <%= link_to product.category.name, product.category %></p> %>
+    </div>
+
+    <% if !show_link %>
+      <section class = section>
+          <p class="card-footer-item">
+            Description: <br><%= product.description %>
+          </p>
+      </section>
+    <% end %>
+
+    <footer class="card-footer">
+      <p class="card-footer-item">
+        Price: <br><%= product.price %>
+      </p>
+      <% if product.sale %>
+        <p class="card-footer-item">
+          Sale: <br><%= product.discount %>% off
+        </p>
+      <% end %>
+      <p class="card-footer-item">
+        Stock: <br><%= product.stock%>
+      </p>
+    </footer>
+  </div>
+</div>
