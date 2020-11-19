@@ -1,19 +1,10 @@
 <h2 class="title is-2"><%= @category.name %></h2>
-
-<%# <h3 class="subtitle is-3">List of all products </h3> %>
+<%= paginate @products %>
 
 <div class="content">
-  <%# <ul> %>
   <div class="columns is-multiline">
-    <% @category.products.each do |product| %>
-      <%# <li> %>
-
-          <%= render partial: 'products/product',
-                    object: product,
-                    locals: { show_link: true } %>
-
-      <%# </li> %>
-    <% end %>
+     <%= render partial: 'products/product',
+             collection: @products,
+             locals: { show_link: true } %>
   </div>
-  <%# </ul> %>
 </div>
