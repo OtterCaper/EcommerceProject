@@ -10,38 +10,21 @@ class Product < ApplicationRecord
     if search
       products = if search_attribute
                    case search_attribute.to_i
-                   when 1
-                     Product.where(['name LIKE ?', "%#{sanitize_sql_like(search)}%"])
                    when 2
-                     if search.length != 0
-                       Product.joins(:category).where(['categories.name LIKE "Adaption" AND products.name LIKE ?', "%#{sanitize_sql_like(search)}%"])
-                     else
-                       Product.joins(:category).where(['categories.name LIKE "Adaption"'])
-                     end
+                     Product.joins(:category).where(['categories.name LIKE "Adaption"'])
                    when 3
-                     if search.length != 0
-                       Product.joins(:category).where(['categories.name LIKE "Emission" AND products.name LIKE ?', "%#{sanitize_sql_like(search)}%"])
-                     else
-                       Product.joins(:category).where(['categories.name LIKE "Emission"'])
-                     end
+                     Product.joins(:category).where(['categories.name LIKE "Emission"'])
                    when 4
-                     if search.length != 0
-                       Product.joins(:category).where(['categories.name LIKE "Enhancement" AND products.name LIKE ?', "%#{sanitize_sql_like(search)}%"])
-                     else
-                       Product.joins(:category).where(['categories.name LIKE "Enhancement"'])
-                     end
+                     Product.joins(:category).where(['categories.name LIKE "Enhancement"'])
                    when 5
-                     if search.length != 0
-                       Product.joins(:category).where(['categories.name LIKE "Manipulation" AND products.name LIKE ?', "%#{sanitize_sql_like(search)}%"])
-                     else
-                       Product.joins(:category).where(['categories.name LIKE "Manipulation"'])
-                     end
+                     Product.joins(:category).where(['categories.name LIKE "Manipulation"'])
                    else
                      Product.all
                    end
                  else
                    Product.all
                  end
+      products = products.where('products.name LIKE ?', "%#{sanitize_sql_like(search)}%") if search.to_s != ''
       products
     else
       Product.all
