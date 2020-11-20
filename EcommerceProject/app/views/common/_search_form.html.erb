@@ -3,6 +3,7 @@
     <div class="control">
       <p>Select category: <%= select_tag(:search_attribute, options_for_select([['All', 1], ['Adaption', 2], ['Emission', 3], ['Enhancement', 4], ['Manipulation', 5]]))  %></p>
       <p>On Sale: <%= check_box_tag(:sale_attribute) %></p>
+      <p>New: <%= check_box_tag(:new_attribute) %></p>
       <%= text_field_tag(:search_term, nil, class: 'input', placeholder: 'Search Products By Name') %>
     </div>
     <div class="control">

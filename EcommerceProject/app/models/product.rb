@@ -6,7 +6,7 @@ class Product < ApplicationRecord
   validates :name, uniqueness: true
   validates :name, :price, :description, :category, :stock, presence: true
 
-  def self.search(search, search_attribute, sale_attribute)
+  def self.search(search, search_attribute, sale_attribute, new_attribute)
     if search
       products = if search_attribute
                    products = Product.joins(:category)
@@ -28,6 +28,8 @@ class Product < ApplicationRecord
       products = products.where('products.name LIKE ?', "%#{sanitize_sql_like(search)}%") if search.to_s != ''
 
       products = products.where(sale: true) if sale_attribute.to_i == 1
+
+      products = products.where('created_at > ?', 3.days.ago) if new_attribute.to_i == 1
 
       products
 
