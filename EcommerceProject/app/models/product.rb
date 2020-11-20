@@ -6,18 +6,19 @@ class Product < ApplicationRecord
   validates :name, uniqueness: true
   validates :name, :price, :description, :category, :stock, presence: true
 
-  def self.search(search, search_attribute)
+  def self.search(search, search_attribute, sale_attribute)
     if search
       products = if search_attribute
+                   products = Product.joins(:category)
                    case search_attribute.to_i
                    when 2
-                     Product.joins(:category).where(['categories.name LIKE "Adaption"'])
+                     products.where(['categories.name LIKE "Adaption"'])
                    when 3
-                     Product.joins(:category).where(['categories.name LIKE "Emission"'])
+                     products.where(['categories.name LIKE "Emission"'])
                    when 4
-                     Product.joins(:category).where(['categories.name LIKE "Enhancement"'])
+                     products.where(['categories.name LIKE "Enhancement"'])
                    when 5
-                     Product.joins(:category).where(['categories.name LIKE "Manipulation"'])
+                     products.where(['categories.name LIKE "Manipulation"'])
                    else
                      Product.all
                    end
@@ -25,7 +26,11 @@ class Product < ApplicationRecord
                    Product.all
                  end
       products = products.where('products.name LIKE ?', "%#{sanitize_sql_like(search)}%") if search.to_s != ''
+
+      products = products.where(sale: true) if sale_attribute.to_i == 1
+
       products
+
     else
       Product.all
     end

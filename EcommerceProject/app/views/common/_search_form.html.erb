@@ -1,7 +1,8 @@
 <%= form_with(url: search_products_path, local: true, method: "get", class: 'mt-5 mb-5') do %>
   <div class="field has-addons">
     <div class="control">
-      <p>Select category: <%= select_tag(:search_attribute, options_for_select([['All', 1], ['Adaption', 2], ['Emission', 3], ['Enhancement', 4], ['Manipulation', 5]]))%></p>
+      <p>Select category: <%= select_tag(:search_attribute, options_for_select([['All', 1], ['Adaption', 2], ['Emission', 3], ['Enhancement', 4], ['Manipulation', 5]]))  %></p>
+      <p>On Sale: <%= check_box_tag(:sale_attribute) %></p>
       <%= text_field_tag(:search_term, nil, class: 'input', placeholder: 'Search Products By Name') %>
     </div>
     <div class="control">
