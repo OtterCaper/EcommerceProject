@@ -1,0 +1,11 @@
+<%= paginate @products %>
+<p>
+  Found <%= pluralize(@products.total_count, 'result') %>
+  for the search term "<%= params[:search_term] %>".
+</p>
+
+<div class="search-results columns is-multiline">
+  <%= render partial: 'product',
+             collection: @products,
+             locals: { show_link: true } %>
+</div>
