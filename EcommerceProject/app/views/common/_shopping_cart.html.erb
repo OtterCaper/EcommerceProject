@@ -1,0 +1,23 @@
+<details>
+    <summary>
+      cart
+      <% if cart.present? %>
+        <sup> <%= cart.size %></sup>
+      </summary>
+      <% if cart.present? %>
+              <ul>
+                <%cart.each do |product|%>
+                  <li>
+                    <%= product.name %> <%= link_to "Remove", cart_path(product), method: :delete %>
+                  </li>
+                <%end%>
+              </ul>
+            <% end %>
+      <% else %>
+        You have no items in the cart
+      <% end %>
+
+      <%# <% if flash[:notice] %>
+        <%# <p><%= flash[:notice] %></p>
+      <%# <% end %>
+  </details>

@@ -3,7 +3,7 @@ Rails.application.routes.draw do
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
   resources :categories, only: %i[index show]
-  # resources :products, only: %i[index show]
+  resources :cart, only: %i[create destroy]
   resources :products, only: :index
   resources :products, only: :show do
     collection do

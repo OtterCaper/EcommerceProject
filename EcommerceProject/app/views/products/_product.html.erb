@@ -26,6 +26,18 @@
       </section>
     <% end %>
 
+    <%# shopping cart %>
+    <% if cart.include?(product) %>
+      <%= button_to cart_path(product), method: :delete do %>
+        Remove From Cart
+      <%end%>
+    <% else %>
+      <%= form_with url: cart_index_path do %>
+        <%= hidden_field_tag(:id, product.id) %>
+        <%= button_tag 'Add to Cart '%>
+        <% end %>
+    <% end %>
+
     <footer class="card-footer">
 
       <% if product.sale %>
