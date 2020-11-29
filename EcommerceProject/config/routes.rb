@@ -4,6 +4,9 @@ Rails.application.routes.draw do
   ActiveAdmin.routes(self)
   resources :categories, only: %i[index show]
   resources :cart, only: %i[create destroy]
+
+  post 'cart/:id/edit', to: 'cart#edit', as: :edit_cart
+
   resources :products, only: :index
   resources :products, only: :show do
     collection do

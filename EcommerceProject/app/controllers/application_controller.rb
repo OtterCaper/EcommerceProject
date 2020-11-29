@@ -12,8 +12,10 @@ class ApplicationController < ActionController::Base
   def cart
     products = []
     session[:shopping_cart].each do |item|
-      products << Product.find(item.keys[0])
+      products << { Product.find(item.keys[0]) => item.values[0] }
     end
+    puts 'object'
+    puts products
     products
   end
 end

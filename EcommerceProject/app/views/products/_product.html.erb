@@ -27,7 +27,7 @@
     <% end %>
 
     <%# shopping cart %>
-    <% if cart.include?(product) %>
+    <% if cart.find { |key, _value| key.include? product } %>
       <%= button_to cart_path(product), method: :delete do %>
         Remove From Cart
       <%end%>
