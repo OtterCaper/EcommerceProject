@@ -3,8 +3,8 @@ class CartController < ApplicationController
   # Data sent as a form data (params)
   def create
     id = params[:id].to_i
-    unless session[:shopping_cart].include?(id)
-      session[:shopping_cart] << id
+    if session[:shopping_cart].select { |key, _value| key.include? id.to_s } == []
+      session[:shopping_cart] << { id => 1 }
       product = Product.find(id)
       flash[:notice] = "#{product.name} added to cart"
     end
@@ -14,7 +14,10 @@ class CartController < ApplicationController
   # DELETE /cart/:id
   def destroy
     id = params[:id].to_i
-    session[:shopping_cart].delete(id)
+    puts 'destroying'
+
+    hash = session[:shopping_cart].select { |key, _value| key.include? id.to_s }
+    session[:shopping_cart].delete(hash[0])
     product = Product.find(id)
     flash[:notice] = "#{product.name} remove from cart"
     redirect_to root_path
