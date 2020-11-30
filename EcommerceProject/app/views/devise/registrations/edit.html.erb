@@ -31,6 +31,15 @@
     <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
   </div>
 
+   <div class="field">
+    <%= f.label :address %><br />
+    <%= f.text_field :address %>
+  </div>
+   <div class="field">
+    <%= f.label :postalcode %><br />
+    <%= f.text_field :postalcode %>
+  </div>
+
   <div class="field">
     <%= f.label :Province_id %>
     <% options = options_from_collection_for_select(provinces, 'id', 'name')%>
