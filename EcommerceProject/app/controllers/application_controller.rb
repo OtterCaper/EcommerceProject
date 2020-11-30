@@ -1,6 +1,7 @@
 class ApplicationController < ActionController::Base
   before_action :initialize_session
   helper_method :cart
+  helper_method :provinces
 
   private
 
@@ -19,5 +20,22 @@ class ApplicationController < ActionController::Base
     puts 'object'
     puts products
     products
+  end
+
+  def provinces
+    Province.all
+  end
+
+  # Prevent CSRF attacks by raising an exception.
+  # For APIs, you may want to use :null_session instead.
+  protect_from_forgery with: :exception
+
+  before_action :configure_permitted_parameters, if: :devise_controller?
+
+  protected
+
+  def configure_permitted_parameters
+    devise_parameter_sanitizer.permit(:sign_up, keys: %i[email password Province_id]) # { |u| u.permit(:email, :password, :province_id) }
+    devise_parameter_sanitizer.permit(:account_update, keys: %i[email password password_confirmation current_password Province_id])
   end
 end

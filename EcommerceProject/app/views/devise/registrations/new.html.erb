@@ -21,6 +21,12 @@
     <%= f.password_field :password_confirmation, autocomplete: "new-password" %>
   </div>
 
+  <div class="field">
+    <%= f.label :Province_id %>
+    <% options = options_from_collection_for_select(provinces, 'id', 'name')%>
+    <%= f.select :Province_id, options %>
+  </div>
+
   <div class="actions">
     <%= f.submit "Sign up" %>
   </div>

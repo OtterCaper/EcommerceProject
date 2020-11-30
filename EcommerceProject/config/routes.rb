@@ -1,7 +1,9 @@
 Rails.application.routes.draw do
   devise_for :users do
     get '/users/sign_out' => 'devise/sessions#destroy'
+    get '/users/edit' => 'devise/registrations#edit' # edit_user_registration_path
   end
+
   get 'about/show'
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)

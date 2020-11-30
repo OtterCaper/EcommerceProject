@@ -13,6 +13,11 @@
   <% end %>
 
   <div class="field">
+    <%= f.label :current_password %><i>(confirm current password)</i><br />
+    <%= f.password_field :current_password, autocomplete: "old-password" %>
+  </div>
+
+  <div class="field">
     <%= f.label :password %> <i>(leave blank if you don't want to change it)</i><br />
     <%= f.password_field :password, autocomplete: "new-password" %>
     <% if @minimum_password_length %>
@@ -27,8 +32,9 @@
   </div>
 
   <div class="field">
-    <%= f.label :current_password %> <i>(we need your current password to confirm your changes)</i><br />
-    <%= f.password_field :current_password, autocomplete: "current-password" %>
+    <%= f.label :Province_id %>
+    <% options = options_from_collection_for_select(provinces, 'id', 'name')%>
+    <%= f.select :Province_id, options %>
   </div>
 
   <div class="actions">
