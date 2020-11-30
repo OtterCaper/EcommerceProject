@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   resources :cart, only: %i[create destroy]
 
   post 'cart/:id/edit', to: 'cart#edit', as: :edit_cart
+  get 'cart/:id', to: 'cart#destroy', as: :delete_cart
 
   resources :products, only: :index
   resources :products, only: :show do

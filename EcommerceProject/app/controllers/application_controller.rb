@@ -6,13 +6,15 @@ class ApplicationController < ActionController::Base
 
   def initialize_session
     # this will initazlize our shopping cart
-    session[:shopping_cart] ||= [{}] # the shopping cart will be an array of product ids.
+    session[:shopping_cart] ||= [] # the shopping cart will be an array of product ids.
   end
 
   def cart
     products = []
-    session[:shopping_cart].each do |item|
-      products << { Product.find(item.keys[0]) => item.values[0] }
+    if session[:shopping_cart] != []
+      session[:shopping_cart].each do |item|
+        products << { Product.find(item.keys[0]) => item.values[0] }
+      end
     end
     puts 'object'
     puts products

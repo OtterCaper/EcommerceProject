@@ -25,7 +25,7 @@
               <%= submit_tag '+'%>
             <% end %>
 
-            <%= product.keys[0].name %> <%= link_to "Remove", cart_path(product.keys[0]), method: :delete %>
+            <%= product.keys[0].name %> <%= link_to "Remove", delete_cart_url(product.keys[0]), method: :delete %>
           </li>
         <%end%>
       </ul>

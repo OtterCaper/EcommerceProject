@@ -7,11 +7,14 @@
           <li><%= link_to 'Products', root_path %></li>
           <li><%= link_to 'Categories', categories_path %></li>
           <li><%= link_to 'About', about_show_path %></li>
+          <li><%= render partial: 'login/login'%></li>
         </ul>
       </div>
     </div>
+
   </div>
   <div class = "container">
     <%= render partial: 'common/search_form'%>
   </div>
+
 </header>
