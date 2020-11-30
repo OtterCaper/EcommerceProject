@@ -8,6 +8,8 @@ class CheckoutController < ApplicationController
       return
     end
 
+    redirect_to new_user_session_path if current_user.nil?
+
     total_before_tax = 0
     stripe_ready_line_items = []
     cart.each do |item|
