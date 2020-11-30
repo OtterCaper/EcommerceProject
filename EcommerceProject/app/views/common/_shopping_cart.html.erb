@@ -7,28 +7,33 @@
   </summary>
   <div>
     <% if cart.present? %>
-            <ul>
-              <%cart.each do |product|%>
-                <li>
-                  <p><%= "Quantity: " + product.values[0].to_s %> </p>
+      <ul>
+        <%cart.each do |product|%>
+          <li>
+            <p><%= "Quantity: " + product.values[0].to_s %> </p>
 
-                  <%= form_tag edit_cart_path(product.keys[0].id) do %>
-                    <%= hidden_field_tag(:id, product.keys[0].id) %>
-                    <%= hidden_field_tag(:add, 'false') %>
-                    <%= submit_tag '-'%>
-                  <% end %>
+            <%= form_tag edit_cart_path(product.keys[0].id) do %>
+              <%= hidden_field_tag(:id, product.keys[0].id) %>
+              <%= hidden_field_tag(:add, 'false') %>
+              <%= submit_tag '-'%>
+            <% end %>
 
 
-                  <%= form_tag edit_cart_path(product.keys[0].id) do %>
-                    <%= hidden_field_tag(:id, product.keys[0].id) %>
-                    <%= hidden_field_tag(:add, 'true') %>
-                    <%= submit_tag '+'%>
-                  <% end %>
+            <%= form_tag edit_cart_path(product.keys[0].id) do %>
+              <%= hidden_field_tag(:id, product.keys[0].id) %>
+              <%= hidden_field_tag(:add, 'true') %>
+              <%= submit_tag '+'%>
+            <% end %>
 
-                  <%= product.keys[0].name %> <%= link_to "Remove", cart_path(product.keys[0]), method: :delete %>
-                </li>
-              <%end%>
-            </ul>
+            <%= product.keys[0].name %> <%= link_to "Remove", cart_path(product.keys[0]), method: :delete %>
+          </li>
+        <%end%>
+      </ul>
+
+      <%= form_with url: checkout_create_path, remote: true do%>
+        <%= button_tag 'Checkout'%>
+      <% end %>
+
     <% else %>
       You have no items in the cart
     <% end %>
