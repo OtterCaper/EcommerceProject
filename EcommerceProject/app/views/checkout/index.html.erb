@@ -1,6 +1,9 @@
 <h2 class="title is-2">Checkout</h2>
 
 
+<p>Shipping address: <%=@province.name + ', ' + current_user.address + ', ' + current_user.postalcode%></p>
+<p><%= link_to "Edit address", edit_user_registration_path %></p>
+
 <%= form_with url: checkout_create_path, remote: true do%>
     <%= button_tag 'Checkout'%>
 <% end %>

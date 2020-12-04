@@ -42,7 +42,7 @@
 
   <div class="field">
     <%= f.label :Province_id %>
-    <% options = options_from_collection_for_select(provinces, 'id', 'name')%>
+    <% options = options_from_collection_for_select(provinces, 'id', 'name', current_user.Province_id)%>
     <%= f.select :Province_id, options %>
   </div>
 
