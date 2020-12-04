@@ -30,9 +30,10 @@
         <%end%>
       </ul>
 
-      <%= form_with url: checkout_create_path, remote: true do%>
-        <%= button_tag 'Checkout'%>
-      <% end %>
+      <%= link_to "Checkout", checkout_index_path %>
+      <%# <%= form_with url: checkout_index_path do%>
+        <%# <%= button_tag 'Checkout'%>
+      <%# <% end %>
 
     <% else %>
       You have no items in the cart
