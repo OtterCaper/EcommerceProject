@@ -1,3 +1,5 @@
+require 'json'
+
 class CheckoutController < ApplicationController
   # POST /checkout/create
   # A product id will be in the params hash: params[:product_id]
@@ -13,8 +15,8 @@ class CheckoutController < ApplicationController
     total_before_tax = 0
     stripe_ready_line_items = []
     cart.each do |item|
-      item_amount = (item.keys[0].price * 100).to_i
-      total_before_tax += item_amount
+      item_amount = ((item.keys[0].price - (item.keys[0].price * item.keys[0].discount)) * 100).to_i
+      total_before_tax += item_amount * item.values[0]
       stripe_ready_line_items << {
         name: item.keys[0].name.to_s,
         description: item.keys[0].description.to_s,
@@ -51,7 +53,7 @@ class CheckoutController < ApplicationController
       line_items: stripe_ready_line_items
     )
 
-    puts @session
+    puts @session.to_json
     puts 'create intent'
     puts @session.payment_intent
     puts @session.amount_total
@@ -95,8 +97,9 @@ class CheckoutController < ApplicationController
     @total_after_tax = 0
     @stripe_ready_line_items = []
     cart.each do |item|
-      item_amount = (item.keys[0].price * 100).to_i
-      @total_before_tax += item_amount
+      # product.price - (product.price * product.discount)
+      item_amount = ((item.keys[0].price - (item.keys[0].price * item.keys[0].discount)) * 100).to_i
+      @total_before_tax += item_amount * item.values[0]
       @stripe_ready_line_items << {
         name: item.keys[0].name.to_s,
         description: item.keys[0].description.to_s,
@@ -110,9 +113,9 @@ class CheckoutController < ApplicationController
 
     @province = Province.find(current_user.Province_id)
     # puts province
-    gst_amount = (@total_before_tax * @province.GST).to_i
-    pst_amount = (@total_before_tax * @province.PST).to_i
-    hst_amount = (@total_before_tax * @province.hst).to_i
+    gst_amount = (@total_before_tax * @province.GST).to_d
+    pst_amount = (@total_before_tax * @province.PST).to_d
+    hst_amount = (@total_before_tax * @province.hst).to_d
 
     @total_after_tax = @total_before_tax + gst_amount + pst_amount + hst_amount
     if gst_amount > 0
@@ -144,10 +147,11 @@ class CheckoutController < ApplicationController
     end
 
     puts 'test index here'
+    puts @stripe_ready_line_items.to_json
     puts @province
-    puts gst_amount
-    puts pst_amount
-    puts hst_amount
+    puts gst_amount / 100
+    puts pst_amount / 100
+    puts hst_amount / 100
     puts @total_before_tax
     puts @total_after_tax
   end
