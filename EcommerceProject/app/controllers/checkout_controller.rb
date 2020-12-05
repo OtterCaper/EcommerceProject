@@ -10,7 +10,10 @@ class CheckoutController < ApplicationController
       return
     end
 
-    redirect_to new_user_session_path if current_user.nil?
+    if current_user.nil?
+      redirect_to new_user_session_path
+      return
+    end
 
     total_before_tax = 0
     stripe_ready_line_items = []
@@ -26,24 +29,42 @@ class CheckoutController < ApplicationController
       }
       # puts item.keys[0].name.to_s + ', quantity: ' + item.values[0].to_s
     end
-    # calculate and add gst and pst from province location
-    stripe_ready_line_items << {
-      name: 'GST',
-      description: 'Goods and Service Tax',
-      amount: (total_before_tax * 0.05).to_i,
-      currency: 'cad',
-      quantity: 1
-    }
-    stripe_ready_line_items << {
-      name: 'PST',
-      description: 'Provincial Sales Tax',
-      amount: (total_before_tax * 0.07).to_i,
-      currency: 'cad',
-      quantity: 1
-    }
+    # calculate and add gst and pst from province location\
 
-    # puts 'check here'
-    # puts stripe_ready_line_items
+    province = Province.find(current_user.Province_id)
+    # puts province
+    gst_amount = (total_before_tax * province.GST).to_i
+    pst_amount = (total_before_tax * province.PST).to_i
+    hst_amount = (total_before_tax * province.hst).to_i
+
+    total_after_tax = total_before_tax + gst_amount + pst_amount + hst_amount
+    if gst_amount > 0
+      stripe_ready_line_items << {
+        name: 'GST',
+        description: 'Goods and Service Tax',
+        amount: gst_amount,
+        currency: 'cad',
+        quantity: 1
+      }
+    end
+    if pst_amount > 0
+      stripe_ready_line_items << {
+        name: 'PST',
+        description: 'Provincial Sales Tax',
+        amount: pst_amount,
+        currency: 'cad',
+        quantity: 1
+      }
+    end
+    if hst_amount > 0
+      stripe_ready_line_items << {
+        name: 'HST',
+        description: 'Harmonized Sales Tax',
+        amount: hst_amount,
+        currency: 'cad',
+        quantity: 1
+      }
+    end
 
     # Establish a connection with stripe
     @session = Stripe::Checkout::Session.create(
@@ -56,7 +77,19 @@ class CheckoutController < ApplicationController
     puts @session.to_json
     puts 'create intent'
     puts @session.payment_intent
+
     puts @session.amount_total
+
+    Status.first.orders.create(
+      user: current_user,
+      GST: gst_amount / 100,
+      PST: pst_amount / 100,
+      HST: hst_amount / 100,
+      amount_before_tax: total_before_tax,
+      shipping_address: province.name + ', ' + current_user.address + ', ' + current_user.postalcode,
+      pi: @session.payment_intent,
+      product_details: stripe_ready_line_items.to_json
+    )
 
     # Establsih a cvonnection with stripe and then redirect ehe user to the payment screen.
 
@@ -146,13 +179,13 @@ class CheckoutController < ApplicationController
       }
     end
 
-    puts 'test index here'
-    puts @stripe_ready_line_items.to_json
-    puts @province
-    puts gst_amount / 100
-    puts pst_amount / 100
-    puts hst_amount / 100
-    puts @total_before_tax
-    puts @total_after_tax
+    # puts 'test index here'
+    # puts @stripe_ready_line_items.to_json
+    # puts @province
+    # puts gst_amount / 100
+    # puts pst_amount / 100
+    # puts hst_amount / 100
+    # puts @total_before_tax
+    # puts @total_after_tax
   end
 end
