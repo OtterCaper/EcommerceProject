@@ -27,7 +27,6 @@ class CheckoutController < ApplicationController
         currency: 'cad',
         quantity: item.values[0]
       }
-      # puts item.keys[0].name.to_s + ', quantity: ' + item.values[0].to_s
     end
     # calculate and add gst and pst from province location\
 
@@ -82,9 +81,9 @@ class CheckoutController < ApplicationController
 
     Status.first.orders.create(
       user: current_user,
-      GST: gst_amount / 100,
-      PST: pst_amount / 100,
-      HST: hst_amount / 100,
+      GST: gst_amount,
+      PST: pst_amount,
+      HST: hst_amount,
       amount_before_tax: total_before_tax,
       shipping_address: province.name + ', ' + current_user.address + ', ' + current_user.postalcode,
       pi: @session.payment_intent,
@@ -92,7 +91,6 @@ class CheckoutController < ApplicationController
     )
 
     # Establsih a cvonnection with stripe and then redirect ehe user to the payment screen.
-
     respond_to do |format|
       format.js # render app/views/checkout/checkout.js.erb -- ie embeded ruby in javascript
     end
@@ -100,18 +98,21 @@ class CheckoutController < ApplicationController
 
   def success
     # successfully got customer's money
-    # add stripe session_id to orders??
     @session = Stripe::Checkout::Session.retrieve(params[:session_id])
     @payment_intent = Stripe::PaymentIntent.retrieve(@session.payment_intent)
+    session[:shopping_cart] = []
 
-    puts 'return intent'
-    puts @payment_intent.id
-    puts @payment_intent.amount_received
-    puts @payment_intent.charges.data[0].paid
+    order = Order.find_by(pi: @payment_intent.id)
+    order.update(status: Status.second)
   end
 
   def cancel
     # something went wrong
+    @session = Stripe::Checkout::Session.retrieve(params[:session_id])
+    @payment_intent = Stripe::PaymentIntent.retrieve(@session.payment_intent)
+
+    order = Order.find_by(pi: @payment_intent.id)
+    order.update(status: Status.third)
   end
 
   # CHECKOUT/SHOW
@@ -130,7 +131,6 @@ class CheckoutController < ApplicationController
     @total_after_tax = 0
     @stripe_ready_line_items = []
     cart.each do |item|
-      # product.price - (product.price * product.discount)
       item_amount = ((item.keys[0].price - (item.keys[0].price * item.keys[0].discount)) * 100).to_i
       @total_before_tax += item_amount * item.values[0]
       @stripe_ready_line_items << {
@@ -140,12 +140,9 @@ class CheckoutController < ApplicationController
         currency: 'cad',
         quantity: item.values[0]
       }
-      # puts item.keys[0].name.to_s + ', quantity: ' + item.values[0].to_s
     end
-    # calculate and add gst and pst from province location\
 
     @province = Province.find(current_user.Province_id)
-    # puts province
     gst_amount = (@total_before_tax * @province.GST).to_d
     pst_amount = (@total_before_tax * @province.PST).to_d
     hst_amount = (@total_before_tax * @province.hst).to_d
@@ -178,14 +175,5 @@ class CheckoutController < ApplicationController
         quantity: 1
       }
     end
-
-    # puts 'test index here'
-    # puts @stripe_ready_line_items.to_json
-    # puts @province
-    # puts gst_amount / 100
-    # puts pst_amount / 100
-    # puts hst_amount / 100
-    # puts @total_before_tax
-    # puts @total_after_tax
   end
 end

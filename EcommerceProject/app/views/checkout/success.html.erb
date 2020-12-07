@@ -1,10 +1,10 @@
-<h1>Great Success!!</h1>
+<% if @payment_intent.charges.data[0].paid %>
+  <p>We have recieved your payment of <%= number_to_currency( @payment_intent.amount / 100 ).to_s %></p>
+  <p>We will ship your order soon...</p>
+<% else %>
+  <p>Something went wrong with the payment. Please contact us for more information</p>
+  <p> -- definitely not fake contact filler information here... </p>
+<% end %>
 
-<%= debug @payment_intent.amount%>
-<%= @payment_intent.charges.data[0].paid %>
-<%# <%= @payment_intent.original_values.charges.data.billing_details.address%> %> %>
 
-
-<%# <%= debug @session%> %>
-<%= debug @payment_intent%>
 
